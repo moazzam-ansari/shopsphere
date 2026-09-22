@@ -1,6 +1,7 @@
 package com.shopsphere.product_service.controller;
 
-import com.shopsphere.product_service.entity.Product;
+import com.shopsphere.product_service.dto.ProductRequestDTO;
+import com.shopsphere.product_service.dto.ProductResponseDTO;
 import com.shopsphere.product_service.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,24 +17,23 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public Product initiateProduct(@Valid @RequestBody Product product) {
-        Product pr = productService.initiateProduct(product);
-        return pr;
+    public ProductResponseDTO initiateProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
+        return productService.initiateProduct(requestDTO);
     }
 
     @GetMapping("/{id}")
-    public Product getProduct(@PathVariable Long id) {
+    public ProductResponseDTO getProduct(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
     @GetMapping
-    public List<Product> getAllProduct() {
+    public List<ProductResponseDTO> getAllProduct() {
         return productService.getAllProduct();
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    public ProductResponseDTO updateProduct(@Valid @PathVariable Long id,@Valid @RequestBody ProductRequestDTO requestDTO) {
+        return productService.updateProduct(id, requestDTO);
     }
 
     @DeleteMapping("/{id}")
