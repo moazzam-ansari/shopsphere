@@ -1,8 +1,9 @@
-package com.shopsphere.product_service.serviceimplementation;
+package com.shopsphere.product_service.serviceimpl;
 
 import com.shopsphere.product_service.dto.ProductRequestDTO;
 import com.shopsphere.product_service.dto.ProductResponseDTO;
 import com.shopsphere.product_service.entity.Product;
+import com.shopsphere.product_service.exception.ProductNotFoundException;
 import com.shopsphere.product_service.mapper.ProductMapper;
 import com.shopsphere.product_service.repository.ProductRepository;
 import com.shopsphere.product_service.service.ProductService;
@@ -43,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not fount with ID: "+ id));
+                .orElseThrow(() -> new ProductNotFoundException("Product not fount with ID: "+ id));
 
         return productMapper.toResponseDTO(product);
     }
@@ -60,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO requestDTO) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
         product.setProductName(requestDTO.getProductName());
         product.setProductPrice(requestDTO.getProductPrice());
         product.setProductStock(requestDTO.getProductStock());
@@ -75,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
         productRepository.delete(product);
     }
 }
