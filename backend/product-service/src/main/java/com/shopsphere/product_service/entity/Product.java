@@ -29,6 +29,12 @@ public class Product {
     @Column(name = "product_stock")
     private Integer productStock;
 
+    @Column(name = "product_category")
+    private Long productCategory;
+
+    @Column(name = "status")
+    private String status;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

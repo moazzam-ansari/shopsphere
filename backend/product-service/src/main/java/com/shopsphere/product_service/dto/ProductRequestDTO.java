@@ -26,4 +26,8 @@ public class ProductRequestDTO {
     @PositiveOrZero
     private Integer productStock;
 
+    @NotNull(message = "productCategory is required")
+    @PositiveOrZero
+    private Long productCategory;
+
 }

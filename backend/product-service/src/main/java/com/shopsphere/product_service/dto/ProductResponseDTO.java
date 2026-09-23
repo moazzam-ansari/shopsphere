@@ -17,5 +17,7 @@ public class ProductResponseDTO {
     private String productName;
     private BigDecimal productPrice;
     private Integer productStock;
+    private Long productCategory;
+    private String status;
     private LocalDateTime createdAt;
 }
