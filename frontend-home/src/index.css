@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #f7f5f0;
+    color: #18181b;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Luxury Gold Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f7f5f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b89628;
+}
+
+/* Light Marble Texture Backdrop */
+.bg-marble-light {
+  background-color: #f7f5f0;
+  background-image: 
+    radial-gradient(at 50% 0%, rgba(212, 175, 55, 0.12) 0px, transparent 70%),
+    radial-gradient(at 0% 100%, rgba(220, 210, 195, 0.25) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(212, 175, 55, 0.08) 0px, transparent 50%);
+}
+
+/* Gold Metallic Text Gradient */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #b89628 0%, #d4af37 40%, #f7e7a9 70%, #aa7c11 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Golden Metallic Button */
+.btn-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #c59b27 50%, #aa7c11 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, #e5be48 0%, #d4af37 50%, #b88b1b 100%);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.45);
+  transform: translateY(-2px);
+}
+
+/* Light Marble Glass Header */
+.glass-header-light {
+  background: rgba(247, 245, 240, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+/* Light Glass Card */
+.glass-card-light {
+  background: #ffffff;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-light:hover {
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 16px 40px rgba(212, 175, 55, 0.18);
+  transform: translateY(-6px);
+}
+
+/* 3D Perspective Utilities */
+.perspective-1200 {
+  perspective: 1200px;
+}
+
+/* Continuous Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Dual Direction Continuous Product Marquees */
+@keyframes marquee-left {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 20s linear infinite;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marquee-right 20s linear infinite;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
