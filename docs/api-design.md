@@ -76,7 +76,7 @@ GET /api/products/1
 }
 ```
 
-### Response — 404 Not Found
+### Response — 404 Not Found 
 
 ```json
 {
@@ -230,7 +230,6 @@ OUT_OF_STOCK
 
 The following APIs will be added in later development stages:
 
-- User / Authentication APIs
 - Category APIs
 - Cart APIs
 - Order APIs
@@ -247,3 +246,82 @@ The following APIs will be added in later development stages:
 - Validation will be applied to incoming requests.
 - API field names must remain consistent between backend and frontend.
 - Breaking changes to API contracts must be discussed before implementation.
+
+
+---
+
+# 9. Authentication APIs
+
+Authentication APIs are responsible for user login and authentication.
+
+## 9.1 User Login
+
+### Endpoint
+
+```http
+POST /api/auth/login
+```
+
+### Request Body
+```json
+{
+  "email": "user@example.com",
+  "password": "Password@123"
+}
+```
+
+### Response — 200 OK
+```json
+{
+  "userId": 1,
+  "email": "user@example.com",
+  "role": "CUSTOMER",
+  "token": "jwt-token"
+}
+```
+
+### Response — 401 Unauthorized
+```json
+{
+  "status": 401,
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+# 10. User APIs
+
+User APIs are responsible for user-related operations.
+
+## 10.1 Get User By ID
+
+### Endpoint
+
+```http
+GET /api/users/{id}
+```
+
+### Example
+```http
+GET /api/users/1
+```
+
+### Response — 200 OK
+```json
+{
+  "userId": 1,
+  "firstName": "Mohd",
+  "lastName": "Ansari",
+  "email": "user@example.com",
+  "role": "CUSTOMER"
+}
+```
+
+### Response — 404 Not Found
+```json
+{
+  "status": 404,
+  "message": "User not found"
+}
+```
