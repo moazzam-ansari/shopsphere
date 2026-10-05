@@ -1,12 +1,48 @@
 import { apiRequest } from './api';
-import { MOCK_PRODUCTS } from '../data/mockProducts';
+
+const categoryLabels = {
+  1: 'Haute Couture',
+  2: "Men's Collection",
+  3: 'Ready To Wear',
+  4: 'Accessories',
+  5: 'Footwear',
+};
+
+const productImages = [
+  'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=800&q=80',
+];
+
+// The product service currently supplies product fields only (not media or
+// descriptions), so UI-only presentation defaults are added here.
+const toFrontendProduct = (product) => {
+  const category = categoryLabels[product.productCategory] || `Category ${product.productCategory}`;
+  const image = productImages[Number(product.productId) % productImages.length];
+
+  return {
+    id: String(product.productId),
+    name: product.productName,
+    price: Number(product.productPrice),
+    category,
+    gender: category === "Men's Collection" ? 'Gentlemen' : 'Ladies',
+    image,
+    hoverImage: image,
+    rating: 5,
+    reviewsCount: 0,
+    tag: product.status || 'ACTIVE',
+    description: `${product.productName} — available while stock lasts.`,
+    stock: product.productStock,
+    status: product.status,
+  };
+};
 
 export const productService = {
   // Get all products with optional filtering & sorting
   async getProducts({ category = 'ALL', search = '', sortBy = 'default' } = {}) {
-    await apiRequest('/products'); // Will trigger real API when backend is ready
-
-    let result = [...MOCK_PRODUCTS];
+    const products = await apiRequest('/products');
+    let result = products.map(toFrontendProduct);
 
     if (category && category !== 'ALL') {
       result = result.filter(p => p.category.toUpperCase() === category.toUpperCase());
@@ -32,32 +68,29 @@ export const productService = {
 
   // Get single product by ID
   async getProductById(id) {
-    await apiRequest(`/products/${id}`);
-    const product = MOCK_PRODUCTS.find(p => p.id === id);
-    if (!product) throw new Error("Product not found");
-    return product;
+    const product = await apiRequest(`/products/${id}`);
+    return toFrontendProduct(product);
   },
 
   // Admin: Create product
   async createProduct(productData) {
-    await apiRequest('/admin/products', { method: 'POST', body: JSON.stringify(productData) });
-    const newProduct = {
-      id: `aura-${Date.now()}`,
-      rating: 5.0,
-      reviewsCount: 1,
-      tag: "NEW ADDITION",
-      formattedPrice: `$${productData.price}`,
-      ...productData,
-    };
-    MOCK_PRODUCTS.unshift(newProduct);
-    return newProduct;
+    const categoryId = Object.entries(categoryLabels)
+      .find(([, label]) => label.toUpperCase() === productData.category.toUpperCase())?.[0] || 1;
+    const product = await apiRequest('/products', {
+      method: 'POST',
+      body: JSON.stringify({
+        productName: productData.name,
+        productPrice: productData.price,
+        productStock: productData.stock ?? 0,
+        productCategory: Number(categoryId),
+      }),
+    });
+    return toFrontendProduct(product);
   },
 
   // Admin: Delete product
   async deleteProduct(id) {
-    await apiRequest(`/admin/products/${id}`, { method: 'DELETE' });
-    const index = MOCK_PRODUCTS.findIndex(p => p.id === id);
-    if (index > -1) MOCK_PRODUCTS.splice(index, 1);
+    await apiRequest(`/products/${id}`, { method: 'DELETE' });
     return true;
   }
 };
