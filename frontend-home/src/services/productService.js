@@ -6,6 +6,7 @@ const categoryLabels = {
   3: 'Ready To Wear',
   4: 'Accessories',
   5: 'Footwear',
+  6: 'Sarees',
 };
 
 const productImages = [
