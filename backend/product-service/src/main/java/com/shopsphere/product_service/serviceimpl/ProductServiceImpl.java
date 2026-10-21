@@ -8,7 +8,10 @@ import com.shopsphere.product_service.mapper.ProductMapper;
 import com.shopsphere.product_service.repository.ProductRepository;
 import com.shopsphere.product_service.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -78,5 +81,13 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
         productRepository.delete(product);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> getProducts(String search, Long categoryId, String status, Pageable pageable) {
+        String s = (search == null || search.isBlank()) ? null : search.trim();
+        return productRepository.search(s, categoryId, status, pageable)
+                .map(productMapper::toResponseDTO);
     }
 }

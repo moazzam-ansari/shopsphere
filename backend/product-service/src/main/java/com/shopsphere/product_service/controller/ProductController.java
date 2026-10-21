@@ -4,7 +4,11 @@ import com.shopsphere.product_service.dto.ProductRequestDTO;
 import com.shopsphere.product_service.dto.ProductResponseDTO;
 import com.shopsphere.product_service.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +17,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/products")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+
+    private final ProductService productService;
 
     @PostMapping
     public ResponseEntity<ProductResponseDTO> initiateProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
@@ -29,7 +34,7 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<ProductResponseDTO> getAllProduct() {
         return productService.getAllProduct();
     }
@@ -43,5 +48,14 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ProductResponseDTO>> getProducts(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String status,
+            @PageableDefault(size = 10, sort = "productId") Pageable pageable) {
+        return ResponseEntity.ok(productService.getProducts(search, categoryId, status, pageable));
     }
 }
