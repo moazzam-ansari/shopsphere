@@ -1,8 +1,10 @@
 package com.shopsphere.product_service.serviceimpl;
 
+import com.shopsphere.product_service.client.CategoryClient;
 import com.shopsphere.product_service.dto.ProductRequestDTO;
 import com.shopsphere.product_service.dto.ProductResponseDTO;
 import com.shopsphere.product_service.entity.Product;
+import com.shopsphere.product_service.exception.InvalidCategoryException;
 import com.shopsphere.product_service.exception.ProductNotFoundException;
 import com.shopsphere.product_service.mapper.ProductMapper;
 import com.shopsphere.product_service.repository.ProductRepository;
@@ -18,15 +20,16 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private final ProductRepository productRepository;
 
-    @Autowired
     private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    private final CategoryClient categoryClient;
+
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, CategoryClient categoryClient) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.categoryClient = categoryClient;
     }
 
     // CREATE
@@ -35,6 +38,9 @@ public class ProductServiceImpl implements ProductService {
 
         // Resquest DTO -> Entity
         Product product = productMapper.toEntity(requestDTO);
+        if (!categoryClient.exists(requestDTO.getProductCategory())) {
+            throw new InvalidCategoryException(requestDTO.getProductCategory());
+        }
 
         // Save
         Product saveProduct = productRepository.save(product);
@@ -69,6 +75,10 @@ public class ProductServiceImpl implements ProductService {
         product.setProductPrice(requestDTO.getProductPrice());
         product.setProductStock(requestDTO.getProductStock());
         product.setProductCategory(requestDTO.getProductCategory());
+
+        if (!categoryClient.exists(requestDTO.getProductCategory())) {
+            throw new InvalidCategoryException(requestDTO.getProductCategory());
+        }
 
         Product updateProduct = productRepository.save(product);
 
