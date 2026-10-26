@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not fount with ID: "+ id));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: "+ id));
 
         return productMapper.toResponseDTO(product);
     }
@@ -71,14 +71,15 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO requestDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
-        product.setProductName(requestDTO.getProductName());
-        product.setProductPrice(requestDTO.getProductPrice());
-        product.setProductStock(requestDTO.getProductStock());
-        product.setProductCategory(requestDTO.getProductCategory());
 
         if (!categoryClient.exists(requestDTO.getProductCategory())) {
             throw new InvalidCategoryException(requestDTO.getProductCategory());
         }
+
+        product.setProductName(requestDTO.getProductName());
+        product.setProductPrice(requestDTO.getProductPrice());
+        product.setProductStock(requestDTO.getProductStock());
+        product.setProductCategory(requestDTO.getProductCategory());
 
         Product updateProduct = productRepository.save(product);
 

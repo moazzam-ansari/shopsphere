@@ -8,8 +8,11 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class RestClientConfig {
 
+    @Value("${category.service.url}")
+    private String categoryServiceUrl;
+
     @Bean
-    public RestClient categoryRestClient(@Value("${category.service.url") String baseUrl) {
-        return RestClient.builder().baseUrl(baseUrl).build();
+    public RestClient categoryRestClient() {
+        return RestClient.builder().baseUrl(categoryServiceUrl).build();
     }
 }

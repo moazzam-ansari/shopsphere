@@ -27,7 +27,7 @@ public class ProductRequestDTO {
     private Integer productStock;
 
     @NotNull(message = "productCategory is required")
-    @PositiveOrZero
+    @Positive(message = "Category ID must be greater than 0")
     private Long productCategory;
 
 }
