@@ -2,6 +2,7 @@ package com.shopsphere.product_service.service;
 
 import com.shopsphere.product_service.dto.ProductRequestDTO;
 import com.shopsphere.product_service.dto.ProductResponseDTO;
+import com.shopsphere.product_service.dto.StockAdjustRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,7 @@ public interface ProductService {
     ProductResponseDTO getProductById(Long id);
     List<ProductResponseDTO> getAllProduct();
     ProductResponseDTO updateProduct(Long id, ProductRequestDTO requestDTO);
+    ProductResponseDTO adjustStock(Long id, StockAdjustRequestDTO request);
     void deleteProduct(Long id);
 
     Page<ProductResponseDTO> getProducts(String search, Long categoryId, String status, Pageable pageable);

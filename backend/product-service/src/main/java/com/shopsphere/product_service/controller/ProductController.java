@@ -2,6 +2,7 @@ package com.shopsphere.product_service.controller;
 
 import com.shopsphere.product_service.dto.ProductRequestDTO;
 import com.shopsphere.product_service.dto.ProductResponseDTO;
+import com.shopsphere.product_service.dto.StockAdjustRequestDTO;
 import com.shopsphere.product_service.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,12 @@ public class ProductController {
     @PutMapping("/{id}")
     public ProductResponseDTO updateProduct(@PathVariable Long id,@Valid @RequestBody ProductRequestDTO requestDTO) {
         return productService.updateProduct(id, requestDTO);
+    }
+
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<ProductResponseDTO> adjustStock(@PathVariable Long id,
+                                                          @Valid @RequestBody StockAdjustRequestDTO request) {
+        return ResponseEntity.ok(productService.adjustStock(id, request));
     }
 
     @DeleteMapping("/{id}")

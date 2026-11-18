@@ -3,7 +3,9 @@ package com.shopsphere.product_service.serviceimpl;
 import com.shopsphere.product_service.client.CategoryClient;
 import com.shopsphere.product_service.dto.ProductRequestDTO;
 import com.shopsphere.product_service.dto.ProductResponseDTO;
+import com.shopsphere.product_service.dto.StockAdjustRequestDTO;
 import com.shopsphere.product_service.entity.Product;
+import com.shopsphere.product_service.exception.InsufficientStockException;
 import com.shopsphere.product_service.exception.InvalidCategoryException;
 import com.shopsphere.product_service.exception.ProductNotFoundException;
 import com.shopsphere.product_service.mapper.ProductMapper;
@@ -84,6 +86,22 @@ public class ProductServiceImpl implements ProductService {
         Product updateProduct = productRepository.save(product);
 
         return productMapper.toResponseDTO(updateProduct);
+    }
+
+    // STOCK UPDATE
+    @Override
+    @Transactional
+    public ProductResponseDTO adjustStock(Long id, StockAdjustRequestDTO request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        int updated = productRepository.adjustStock(id, request.getDelta());
+        if (updated == 0) {
+            throw new InsufficientStockException(id);
+        }
+
+        Product refreshed = productRepository.findById(id).orElse(product);
+        return productMapper.toResponseDTO(refreshed);
     }
 
     // DELETE
